@@ -14,7 +14,7 @@ class FileStorage:
         if not cls:
             return FileStorage.__objects
         for key in self.__objects:
-            if key.split('.')[0] == cls:
+            if type(self.__objects[key]) == cls:
                 result[key] = FileStorage.__objects[key]
         return result
 
