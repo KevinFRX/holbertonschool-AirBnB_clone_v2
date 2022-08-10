@@ -38,7 +38,7 @@ class DBStorage():
         objs = []
         if cls is None:
             str_classes = ['State', 'City']
-                          #  'Place', 'Amenity', 'Review','User'
+            #  'Place', 'Amenity', 'Review','User'
             for str in str_classes:
                 qry = self.__session.query(eval(str))
                 for objects in qry:
@@ -53,7 +53,7 @@ class DBStorage():
     def new(self, obj):
         """add the object to the current database session"""
         if obj:
-            self.__session.add(obj.to)
+            self.__session.add(obj)
 
     def save(self):
         """commit all changes of the current database session"""
