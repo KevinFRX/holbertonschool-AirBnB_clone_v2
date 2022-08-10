@@ -9,9 +9,18 @@ from sqlalchemy.orm import backref
 from models import storage
 STORAGE_TYPE = os.environ.get('HBNB_TYPE_STORAGE')
 
+place_amenity = Table('place_amenity', Base.metadata,
+                      Column('place_id', String(60), ForeignKey(
+                          'places.id'), nullable=False),
+                      Column('amenity_id', String(60), ForeignKey(
+                          'amenities.id'), nullable=False)
+                      )
+
 
 class Place(BaseModel, Base):
     """Place class handles all application places"""
+    amenity_ids = []
+
     if STORAGE_TYPE == "db":
         __tablename__ = 'places'
         city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
@@ -28,7 +37,6 @@ class Place(BaseModel, Base):
         amenities = relationship('Amenity', secondary="place_amenity",
                                  viewonly=False)
         reviews = relationship('Review', backref='place', cascade='delete')
-        amenity_ids = []
     else:
         city_id = ''
         user_id = ''
@@ -40,7 +48,6 @@ class Place(BaseModel, Base):
         price_by_night = 0
         latitude = 0.0
         longitude = 0.0
-        amenity_ids = []
         review_ids = []
 
     @property
@@ -56,17 +63,10 @@ class Place(BaseModel, Base):
     @property
     def amenities(self):
         """amenities getter"""
-        return amenity_ids
+        return 
 
     @amenities.setter
     def amenities(self, obj):
         """amenities setter"""
         if type(obj) == "Amenity":
             amenity_ids.append(obj.id)
-
-    place_amenity = Table('place_amenity', Base.metadata,
-                          Column('place_id', String(60), ForeignKey(
-                              'places.id'), nullable=False),
-                          Column('amenity_id', String(60), ForeignKey(
-                              'amenities.id'), nullable=False)
-                          )
