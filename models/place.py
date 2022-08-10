@@ -5,11 +5,12 @@ from models.base_model import BaseModel, Base
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, Float, ForeignKey,\
     MetaData, Table, ForeignKey
-from sqlalchemy.orm import backref
-from models import storage
+# from sqlalchemy.orm import backref
+import models
 STORAGE_TYPE = os.environ.get('HBNB_TYPE_STORAGE')
+metadata = MetaData()
 
-place_amenity = Table('place_amenity', Base.metadata,
+place_amenity = Table('place_amenity', metadata,
                       Column('place_id', String(60), ForeignKey(
                           'places.id'), nullable=False),
                       Column('amenity_id', String(60), ForeignKey(
@@ -34,8 +35,8 @@ class Place(BaseModel, Base):
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
 
-        amenities = relationship('Amenity', secondary="place_amenity",
-                                 viewonly=False)
+        amenities = relationship(
+            'Amenity', secondary=place_amenity, viewonly=False)
         reviews = relationship('Review', backref='place', cascade='delete')
     else:
         city_id = ''
@@ -54,7 +55,7 @@ class Place(BaseModel, Base):
     def reviews(self):
         """reviews getter"""
         lista = []
-        reviews = storage.all("Review")
+        reviews = models.storage.all("Review")
         for x in self.reviews.values():
             if x.place_id == self.id:
                 lista.append(x)
@@ -63,10 +64,10 @@ class Place(BaseModel, Base):
     @property
     def amenities(self):
         """amenities getter"""
-        return 
+        return
 
     @amenities.setter
     def amenities(self, obj):
         """amenities setter"""
         if type(obj) == "Amenity":
-            amenity_ids.append(obj.id)
+            self.amenity_ids.append(obj.id)
