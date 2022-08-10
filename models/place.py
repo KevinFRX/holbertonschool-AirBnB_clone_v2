@@ -9,7 +9,7 @@ from sqlalchemy.orm import backref
 STORAGE_TYPE = os.environ.get('HBNB_TYPE_STORAGE')
 
 
-class Place(BaseModel):
+class Place(BaseModel, Base):
     """Place class handles all application places"""
     if STORAGE_TYPE == "db":
         __tablename__ = 'places'
@@ -24,9 +24,9 @@ class Place(BaseModel):
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
 
-        amenities = relationship('Amenity', secondary="place_amenity",
-                                 viewonly=False)
-        reviews = relationship('Review', backref='place', cascade='delete')
+        # amenities = relationship('Amenity', secondary="place_amenity",
+        #                          viewonly=False)
+        # reviews = relationship('Review', backref='place', cascade='delete')
     else:
         city_id = ''
         user_id = ''
