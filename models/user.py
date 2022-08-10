@@ -8,7 +8,7 @@ from sqlalchemy import Column, Integer, String, Float
 STORAGE_TYPE = os.environ.get('HBNB_TYPE_STORAGE')
 
 
-class User(BaseModel):
+class User(BaseModel, Base):
     """
         User class handles all application users
     """
@@ -29,7 +29,7 @@ class User(BaseModel):
 
     def __init__(self, *args, **kwargs):
         """
-            instantiates user object
+           instantiates user object
         """
         if kwargs:
             pwd = kwargs.pop('password', None)
