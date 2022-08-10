@@ -42,6 +42,22 @@ class Place(BaseModel, Base):
         review_ids = []
 
     @property
-    def amenities(self):
-        """Getter"""
+    def reviews(self):
+        """reviews getter"""
+        lista = []
+        reviews = storage.all("Review")
+        for x in self.reviews.values():
+            if x.place_id == self.id:
+                lista.append(x)
+        return (lista)
 
+    @property
+    def amenities(self):
+        """amenities getter"""
+        return amenity_ids
+
+    @amenities.setter
+    def amenities(self, obj):
+        """amenities setter"""
+        if type(obj) == "Amenity":
+            amenity_ids.append(obj.id)
