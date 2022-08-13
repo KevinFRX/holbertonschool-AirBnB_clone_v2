@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """This module defines a class User"""
-import hashlib
 import os
 from models.base_model import BaseModel, Base
 from sqlalchemy.orm import relationship
@@ -29,7 +28,7 @@ class User(BaseModel, Base):
 
     # def __init__(self, *args, **kwargs):
     #     """
-    #        instantiates user object
+    #         instantiates user object
     #     """
     #     if kwargs:
     #         pwd = kwargs.pop('password', None)
