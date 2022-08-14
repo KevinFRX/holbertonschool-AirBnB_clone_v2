@@ -52,7 +52,8 @@ class BaseModel:
 
     def __set_attributes(self, attr_dict):
         """
-            private: converts attr_dict values to python class attributes
+            private: converts attr_dict values to python class
+            attributes
         """
         if 'id' not in attr_dict:
             attr_dict['id'] = str(uuid4())
@@ -79,7 +80,10 @@ class BaseModel:
         return '[{}] ({}) {}'.format(cls, self.id, self.to_dict())
 
     def save(self):
-        """Updates updated_at with current time when instance is changed"""
+        """
+        Updates updated_at with current time when instance is
+        changed
+        """
         from models import storage
         self.updated_at = datetime.now()
         """new: 1 row"""
