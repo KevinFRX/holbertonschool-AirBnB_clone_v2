@@ -15,7 +15,8 @@ if STORAGE_TYPE == "db":
     place_amenity = Table('place_amenity', Base.metadata,
                           Column('place_id', String(60), ForeignKey(
                               'places.id'), primary_key=True),
-                          Column('amenity_id', String(60), ForeignKey('amenities.id'), primary_key=True))
+                          Column('amenity_id', String(60), ForeignKey
+                                 ('amenities.id'), primary_key=True))
 
 
 class Place(BaseModel, Base):
@@ -33,7 +34,8 @@ class Place(BaseModel, Base):
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
         amenities = relationship(
-            'Amenity', secondary=place_amenity, back_populates='place_amenities', viewonly=False)
+            'Amenity', secondary=place_amenity,
+            back_populates='place_amenities', viewonly=False)
 
         reviews = relationship('Review', backref='place', cascade='delete')
     else:
