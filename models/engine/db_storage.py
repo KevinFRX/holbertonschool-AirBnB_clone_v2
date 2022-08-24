@@ -26,7 +26,8 @@ class DBStorage():
         sql_host = getenv('HBNB_MYSQL_HOST')
         sql_database = getenv('HBNB_MYSQL_DB')
         self.__engine = create_engine(
-            f"mysql+mysqldb://{sql_user}:{sql_password}@{sql_host}:3306/{sql_database}", pool_pre_ping=True)
+            f"mysql+mysqldb://{sql_user}:{sql_password}@{sql_host}:3306\
+              {sql_database}", pool_pre_ping=True)
         Session = sessionmaker(bind=self.__engine)
         self.__session = Session()
         if getenv('HBNB_ENV') == 'test':

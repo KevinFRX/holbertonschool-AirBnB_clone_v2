@@ -1,0 +1,4 @@
+Name	Username	IP	State	
+4434-web-01	ubuntu	54.162.164.215	running	
+4434-web-02	ubuntu	54.221.24.84	running	
+4434-lb-01	ubuntu	54.89.232.152	running	

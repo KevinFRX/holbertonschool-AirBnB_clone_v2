@@ -1,17 +1,10 @@
 #!/usr/bin/python3
 """test for file storage"""
 import unittest
-import pep
+import pycodestyle
 import json
 import os
-from models.base_model import BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
-from models.engine.file_storage import FileStorage
+from models import User, FileStorage
 
 
 class TestFileStorage(unittest.TestCase):
@@ -38,11 +31,12 @@ class TestFileStorage(unittest.TestCase):
         except Exception:
             pass
 
-    def test_pep8_FileStorage(self):
-        """Tests pep8 style"""
-        style = pep8.StyleGuide(quiet=True)
-        p = style.check_files(['models/engine/file_storage.py'])
-        self.assertEqual(p.total_errors, 0, "fix pep8")
+    def test_conformance(self):
+        """Test that we conform to PEP-8."""
+        style = pycodestyle.StyleGuide(quiet=True)
+        result = style.check_files(['models/engine/file_storage.py'])
+        self.assertEqual(result.total_errors, 0,
+                         "Found code style errors (and warnings).")
 
     def test_all(self):
         """tests if all works in File Storage"""
@@ -50,7 +44,7 @@ class TestFileStorage(unittest.TestCase):
         obj = storage.all()
         self.assertIsNotNone(obj)
         self.assertEqual(type(obj), dict)
-        self.assertIs(obj, storage._FileStorage__objects)
+        self.assertIs(obj, storage.__objects)
 
     def test_new(self):
         """test when new is created"""
