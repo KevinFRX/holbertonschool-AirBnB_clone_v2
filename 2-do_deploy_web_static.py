@@ -5,13 +5,15 @@ archive to your web servers, using the function do_deploy:
 from fabric.api import *
 from os import path
 
-env.hosts = ['54.162.164.215', '54.221.24.84']
+env.hosts = ['54.162.164.215',
+             #  '54.221.24.84'
+             ]
 
 
 def do_deploy(archive_path):
     """Deploys archives to servers
     """
-    if not path.exists(archive_path):
+    if not path.exists(archive_path) or not path.isfile(archive_path):
         return False
     ret_value = True
     # Set the folder
