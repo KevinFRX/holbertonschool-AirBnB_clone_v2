@@ -5,9 +5,7 @@ archive to your web servers, using the function do_deploy:
 from fabric.api import *
 from os import path
 
-env.hosts = ['54.162.164.215',
-             #  '54.221.24.84'
-             ]
+env.hosts = ['54.162.164.215', '54.221.24.84']
 
 
 def do_deploy(archive_path):
@@ -38,10 +36,12 @@ def do_deploy(archive_path):
     if d_cleanfile.failed:
         ret_value = False
     # The files are created under a web_static folder move it.
-    d_move = run('mv /data/web_static/releases/' + archive_file +
+    d_move = run('cp -R /data/web_static/releases/' + archive_file +
                  '/web_static/* /data/web_static/releases/' + archive_file +
                  '/')
-    if d_move.failed:
+    d_del = run('rm -rf /data/web_static/releases/' + archive_file +
+                '/web_static')
+    if d_move.failed or d_del.failed:
         ret_value = False
     # Remove the now empty folder
     d_cleanfolder = run('rm -rf /data/web_static/releases/' + archive_file +
