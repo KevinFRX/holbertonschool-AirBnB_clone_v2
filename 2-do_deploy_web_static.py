@@ -58,6 +58,6 @@ def do_deploy(archive_path):
     if d_createnew.failed:
         ret_value = False
     # All set
-    if ret_value:
-        print("All tasks succeeded!")
+    # if ret_value:
+    #     print("All tasks succeeded!")
     return ret_value

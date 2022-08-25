@@ -12,7 +12,7 @@ def do_pack():
     bak_file = 'versions/web_static_{:s}.tgz'\
                .format(datetime.now().strftime("%Y%m%d%H%M%S"))
     local('mkdir -p versions')
-    command = local("tar -cvzf " + bak_file + " ./web_static/")
-    if command.succeeded:
+    result = local("tar -cvzf " + bak_file + " ./web_static/")
+    if result.succeeded:
         return bak_file
     return None
