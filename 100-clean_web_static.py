@@ -89,6 +89,11 @@ def do_clean(number=0):
         else:
             run("ls -t | tail -n +{} | egrep -v 'test'| \
               xargs rm -rfv".format(n + 1))
+    with lcd('versions'):
+        if n == 0 or n == 1:
+            local('ls -t | tail -n +2 | xargs rm -rfv')
+        else:
+            local('ls -t | tail -n +{} | xargs rm -rfv'.format(n + 1))
 
 
 def deploy():
