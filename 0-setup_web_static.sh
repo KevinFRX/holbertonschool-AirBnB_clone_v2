@@ -10,7 +10,7 @@ sudo echo -e "<html>\n\t<head>\n\t</head>\n\t<body>\n\t\tHolberton School\n\
 sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 # Adjust permissions
 sudo chown ubuntu:ubuntu -R /data
-sudo sed -i '/listen 80 default_server/a \\tlocation /hbnb_static/ {\n\t alias /data/web_static/current/;\n\t}' /etc/nginx/sites-available/default
+grep -q -e 'location /hbnb_static/' /etc/nginx/sites-available/default || sudo sed -i '/listen 80 default_server/a \\tlocation /hbnb_static/ {\n\t alias /data/web_static/current/;\n\t}' /etc/nginx/sites-available/default
 # Restart nginx
 sudo service nginx restart
 # Exit with 0 code
