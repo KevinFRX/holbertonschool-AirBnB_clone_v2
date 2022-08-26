@@ -83,11 +83,11 @@ def do_clean(number=0):
     n = int(number)
     """Deletes out-of-date archives
     """
-    with lcd('versions'):
-        if n == 0 or n == 1:
-            local('ls -t | tail -n +2 | xargs rm -rfv')
-        else:
-            local('ls -t | tail -n +{} | xargs rm -rfv'.format(n + 1))
+    # with lcd('versions'):
+    #     if n == 0 or n == 1:
+    #         local('ls -t | tail -n +2 | xargs rm -rfv')
+    #     else:
+    #         local('ls -t | tail -n +{} | xargs rm -rfv'.format(n + 1))
     with cd('/data/web_static/releases/'):
         if n == 0 or n == 1:
             run('ls -t | tail -n +2 | xargs rm -rfv')
