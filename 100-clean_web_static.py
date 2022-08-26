@@ -86,11 +86,11 @@ def do_clean(number=0):
 
     with cd('/data/web_static/releases/'):
         if n == 0 or n == 1:
-            run("ls -t | tail -n +2 | egrep -v 'test' | xargs rm -rfv")
+            run("ls -t | tail -n +2 | xargs rm -rfv")
         else:
-            run("ls -t | tail -n +{} | egrep -v 'test'| \
+            run("ls -t | tail -n +{} | \
               xargs rm -rfv".format(n + 1))
-    with lcd('versions'):
+    with lcd('/versions'):
         if n == 0 or n == 1:
             local('ls -t | tail -n +2 | xargs rm -rfv')
         else:
