@@ -80,9 +80,10 @@ def do_deploy(archive_path):
 
 
 def do_clean(number=0):
-    n = int(number)
     """Deletes out-of-date archives
     """
+    n = int(number)
+
     with cd('/data/web_static/releases/'):
         if n == 0 or n == 1:
             run("ls -t | tail -n +2 | egrep -v 'test' | xargs rm -rfv")
