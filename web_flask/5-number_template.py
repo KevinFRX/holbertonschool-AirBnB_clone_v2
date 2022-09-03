@@ -33,13 +33,13 @@ def python(text="is cool"):
     return 'Python %s' % text.replace('_', ' ')
 
 
-@app.route('/number/<int:n>')
+@app.route('/number/<int:n>', strict_slashes=False)
 def num(n):
     """/number/<n>: display “n is a number” only if n is an integer"""
     return '%d is a number' % n
 
 
-@app.route('/number_template/<int:n>')
+@app.route('/number_template/<int:n>', strict_slashes=False)
 def num_template(n):
     """/number_template/<n>: display a HTML page only if n is an integer:
     H1 tag: “Number: n” inside the tag BODY"""
