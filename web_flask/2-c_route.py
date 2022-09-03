@@ -22,7 +22,7 @@ def hbnb():
 def c(var):
     """/c/<text>: display “C ” followed by the value of the text variable
     (replace underscore _ symbols with a space )"""
-    return str(f"C {var.replace('_', ' ')}")
+    return 'C %s' % var.replace('_', ' ')
 
 
 if __name__ == '__main__':
