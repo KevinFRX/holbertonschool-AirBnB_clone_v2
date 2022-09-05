@@ -9,7 +9,9 @@ from models.user import User
 from models.place import Place
 from models.amenity import Amenity
 
-if getenv('HBNB_TYPE_STORAGE') == 'db':
+type_s = getenv('HBNB_TYPE_STORAGE')
+
+if (type_s == 'db'):
     storage = DBStorage()
 else:
     storage = FileStorage()
