@@ -115,6 +115,10 @@ class BaseModel:
         """
           delete the current instance from the storage
           new:the whole function
+
+          from models import storage
+          storage.delete(self)
         """
+        key = self.__class__ + self.id
         from models import storage
-        storage.delete(self)
+        del storage.__objects[key]
