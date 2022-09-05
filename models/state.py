@@ -16,9 +16,9 @@ class State(BaseModel, Base):
         __tablename__ = 'states'
         name = Column(String(128),
                       nullable=False)
-        cities = relationship('City',
-                              backref='state',
-                              cascade='all, delete')
+        cities = relationship("City",
+                              backref="state",
+                              cascade="all, delete")
 
     # FIX: for FileStorage with getter attribute
     if STORAGE_TYPE == 'fs':
@@ -26,8 +26,8 @@ class State(BaseModel, Base):
 
         @property
         def cities(self):
-            _list = []
+            new_list = []
             for key, value in models.storage.all(City).items():
                 if self.id == value.state_id:
-                    _list.append(value)
-            return _list
+                    new_list.append(value)
+            return new_list
