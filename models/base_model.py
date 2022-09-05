@@ -1,19 +1,13 @@
 #!/usr/bin/python3
-"""This module defines a base class for all models in our hbnb clone"""
+"""This module defines a base class for all models in hbnb clone"""
 import uuid
 from datetime import datetime
+from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, DateTime
-from uuid import uuid4, UUID
 from os import getenv
 
-STORAGE_TYPE = getenv('HBNB_TYPE_STORAGE')
 
-"""
-    Creates instance of Base if storage type is a database
-    If not database storage, uses class Base
-"""
-if STORAGE_TYPE == 'db':
+if getenv('HBNB_TYPE_STORAGE') == 'db':
     Base = declarative_base()
 else:
     class Base:
@@ -21,57 +15,39 @@ else:
 
 
 class BaseModel:
-    """
-    A base class for all hbnb models
-    ***reviewed***
-    """
-    if STORAGE_TYPE == 'db':
-        """ adding ORM configuration"""
-        id = Column(String(60),
-                    primary_key=True,
-                    nullable=False)
+    """A base class for all hbnb models"""
 
-        created_at = Column(DateTime,
-                            nullable=False,
-                            default=datetime.utcnow())
-
-        updated_at = Column(DateTime,
-                            nullable=False,
-                            default=datetime.utcnow())
-    """---------------------------------------"""
+    if (getenv('HBNB_TYPE_STORAGE') == 'db'):
+        id = Column(String(60), nullable=False, primary_key=True)
+        created_at = Column(DateTime, nullable=False, default=datetime.now())
+        updated_at = Column(DateTime, nullable=False, default=datetime.now())
 
     def __init__(self, *args, **kwargs):
-        """
-            instantiation of new BaseModel Class
-        """
-        if kwargs:
-            self.__set_attributes(kwargs)
-        else:
-            self.id = str(uuid4())
-            self.created_at = datetime.utcnow()
-
-    def __set_attributes(self, kwargs):
-        """
-            private: converts kwargs values to python class
-            attributes
-        """
-        try:
-            kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-        except Exception:
-            self.updated_at = datetime.now()
-        try:
-            kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-        except Exception:
-            self.created_at = datetime.now()
-        try:
-            del kwargs['__class__']
-        except Exception:
-            pass
-        if 'id' not in kwargs:
+        """Instatntiates a new model"""
+        if not kwargs:
             self.id = str(uuid.uuid4())
-        self.__dict__.update(kwargs)
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+        if kwargs:
+            try:
+                kwargs['updated_at'] = datetime.strptime(
+                    kwargs['updated_at'],
+                    '%Y-%m-%dT%H:%M:%S.%f')
+            except Exception:
+                self.updated_at = datetime.now()
+            try:
+                kwargs['created_at'] = datetime.strptime(
+                    kwargs['created_at'],
+                    '%Y-%m-%dT%H:%M:%S.%f')
+            except Exception:
+                self.created_at = datetime.now()
+            try:
+                del kwargs['__class__']
+            except Exception:
+                pass
+            if 'id' not in kwargs:
+                self.id = str(uuid.uuid4())
+            self.__dict__.update(kwargs)
 
     def __str__(self):
         """Returns a string representation of the instance"""
@@ -83,13 +59,9 @@ class BaseModel:
         return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
 
     def save(self):
-        """
-        Updates updated_at with current time when instance is
-        changed
-        """
+        """Updates updated_at with current time when instance is changed"""
         from models import storage
         self.updated_at = datetime.now()
-        """new: 1 row"""
         storage.new(self)
         storage.save()
 
@@ -108,11 +80,7 @@ class BaseModel:
         return dictionary
 
     def delete(self):
-        """
-          delete the current instance from the storage
-          new:the whole function
-        """
+        """delete obj"""
         key = self.__class__ + self.id
         from models import storage
         del storage.__objects[key]
-        storage.delete(self)
