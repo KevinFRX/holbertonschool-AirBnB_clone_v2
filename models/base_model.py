@@ -97,16 +97,12 @@ class BaseModel:
         """Convert instance into dict format"""
         dictionary = {}
         dictionary.update(self.__dict__)
-
         dictionary.update({'__class__':
                           (str(type(self)).split('.')[-1]).split('\'')[0]})
-
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
-        """new: 2 rows: remove the key _sa_instance_state"""
         try:
-            if dictionary['_sa_instance_state']:
-                del dictionary['_sa_instance_state']
+            del dictionary['_sa_instance_state']
         except Exception:
             pass
         return dictionary
@@ -115,10 +111,8 @@ class BaseModel:
         """
           delete the current instance from the storage
           new:the whole function
-
-          from models import storage
-          storage.delete(self)
         """
         key = self.__class__ + self.id
         from models import storage
         del storage.__objects[key]
+        storage.delete(self)
