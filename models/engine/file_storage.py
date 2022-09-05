@@ -61,7 +61,7 @@ class FileStorage:
     def delete(self, obj=None):
         """public method to delete obj from __objects in case of existence"""
         if obj:
-            key = f"{type(obj).__name__}.{obj.id}"
+            key = obj.__class__ + obj.id
             if self.__objects[key]:
                 del self.__objects[key]
 
