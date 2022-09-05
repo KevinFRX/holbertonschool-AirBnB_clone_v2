@@ -20,40 +20,45 @@ class DBStorage():
     __session = None
 
     def __init__(self):
-        """__init__"""
-        sql_user = getenv('HBNB_MYSQL_USER')
-        sql_password = getenv('HBNB_MYSQL_PWD')
-        sql_host = getenv('HBNB_MYSQL_HOST')
-        sql_database = getenv('HBNB_MYSQL_DB')
+        """initialize instance"""
+        user = getenv('HBNB_MYSQL_USER')
+        passwd = getenv('HBNB_MYSQL_PWD')
+        host = getenv('HBNB_MYSQL_HOST')
+        db = getenv('HBNB_MYSQL_DB')
+        test = getenv('HBNB_ENV')
+
         self.__engine = create_engine(
-            "mysql+mysqldb://{}:{}@{}:3306/{}".format(
-                sql_user,
-                sql_password,
-                sql_host,
-                sql_database),
-            pool_pre_ping=True)
-        Session = sessionmaker(bind=self.__engine)
-        self.__session = Session()
-        if getenv('HBNB_ENV') == 'test':
+            "mysql+mysqldb://{}:{}@{}/{}".format(
+                user,
+                passwd,
+                host,
+                db
+            ),
+            pool_pre_ping=True
+        )
+        if (test == 'test'):
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """Fetch objects from tables in function of the class"""
-        res = {}
-        objs = []
-        if cls is None:
-            str_classes = ['State', 'City', 'Place',
-                           'Amenity', 'Review', 'User']
-            for str in str_classes:
-                qry = self.__session.query(eval(str))
-                for objects in qry:
-                    objs.append(objects)
+        """all objecsts depending of the cls"""
+        new_dict = {}
+        if cls is not None:
+            for obj in self.__session.query(cls):
+                key = type(cls).__name__ + obj.id
+                new_dict[key] = obj
         else:
-            objs = self.__session.query(cls).all()
-        for obj in objs:
-            key = f"{type(obj).__name__}.{obj.id}"
-            res[key] = obj
-        return res
+            for _cls in [
+                    'State',
+                    'City',
+                    'User',
+                    'Place',
+                    'Review',
+                    'Amenity']:
+                objs = self.__session.query(eval(_cls)).all()
+                for obj in objs:
+                    key = _cls + "." + obj.id
+                    new_dict[key] = obj
+        return new_dict
 
     def new(self, obj):
         """add the object to the current database session"""
@@ -65,16 +70,20 @@ class DBStorage():
         self.__session.commit()
 
     def delete(self, obj=None):
-        """delete from the current database session"""
-        if obj:
-            self.__session.delete(obj)
+        """delete from te current session"""
+        if (obj is not None):
+            self.__session.query(obj.__class__).filter(
+                obj.__class__.id == obj.id).delete(
+                synchronize_session="fetch")
 
     def reload(self):
-        """create all tables in the database """
+        """create all tables in db"""
         Base.metadata.create_all(self.__engine)
-        Session = scoped_session(sessionmaker(
-            bind=self.__engine, expire_on_commit=False))
-        self.__session = Session()
+        session_factory = sessionmaker(
+            bind=self.__engine,
+            expire_on_commit=False)
+        session_reg = scoped_session(session_factory)
+        self.__session = session_reg()
 
     def close(self):
         """Calls remove() on private session attribute (self.session)"""

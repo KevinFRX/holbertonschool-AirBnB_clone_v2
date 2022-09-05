@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 """This module defines a base class for all models in our hbnb clone"""
-import os
 import uuid
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, DateTime
 from uuid import uuid4, UUID
+from os import getenv
 
-STORAGE_TYPE = os.environ.get('HBNB_TYPE_STORAGE')
+STORAGE_TYPE = getenv('HBNB_TYPE_STORAGE')
 
 """
     Creates instance of Base if storage type is a database
@@ -50,32 +50,35 @@ class BaseModel:
             self.id = str(uuid4())
             self.created_at = datetime.utcnow()
 
-    def __set_attributes(self, attr_dict):
+    def __set_attributes(self, kwargs):
         """
-            private: converts attr_dict values to python class
+            private: converts kwargs values to python class
             attributes
         """
-        if 'id' not in attr_dict:
-            attr_dict['id'] = str(uuid4())
-        if 'created_at' not in attr_dict:
-            attr_dict['created_at'] = datetime.utcnow()
-        elif not isinstance(attr_dict['created_at'], datetime):
-            attr_dict['created_at'] = datetime.strptime(
-                attr_dict['created_at'], "%Y-%m-%dT%H:%M:%S.%f"
-            )
-        if 'updated_at' not in attr_dict:
-            attr_dict['updated_at'] = datetime.utcnow()
-        elif not isinstance(attr_dict['updated_at'], datetime):
-            attr_dict['updated_at'] = datetime.strptime(
-                attr_dict['updated_at'], "%Y-%m-%dT%H:%M:%S.%f"
-            )
-        if STORAGE_TYPE != 'db':
-            attr_dict.pop('__class__', None)
-        for attr, val in attr_dict.items():
-            setattr(self, attr, val)
+        try:
+            kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
+                                                     '%Y-%m-%dT%H:%M:%S.%f')
+        except Exception:
+            self.updated_at = datetime.now()
+        try:
+            kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
+                                                     '%Y-%m-%dT%H:%M:%S.%f')
+        except Exception:
+            self.created_at = datetime.now()
+        try:
+            del kwargs['__class__']
+        except Exception:
+            pass
+        if 'id' not in kwargs:
+            self.id = str(uuid.uuid4())
+        self.__dict__.update(kwargs)
 
     def __str__(self):
         """Returns a string representation of the instance"""
+        try:
+            del self.__dict__['_sa_instance_state']
+        except Exception:
+            pass
         cls = (str(type(self)).split('.')[-1]).split('\'')[0]
         return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
 
