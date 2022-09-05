@@ -22,7 +22,7 @@ class City(BaseModel, Base):
         places = relationship("Place",
                               backref='cities',
                               cascade="all, delete-orphan")
-    else:
+    if STORAGE_TYPE != 'db':
         state_id = ''
         name = ''
         places = []
