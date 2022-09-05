@@ -1,22 +1,23 @@
 #!/usr/bin/python3
-"""ORM implementation: DBStorage definition"""
-from models.base_model import BaseModel, Base
-from models.user import User
-from models.state import State
-from models.city import City
-from models.place import Place
-from models.amenity import Amenity
-from models.review import Review
+"""MySql engine DBStorage"""
+
 from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-from models.base_model import BaseModel, Base
+from models.base_model import Base
+from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
+from models.base_model import Base
 
 
-class DBStorage():
-    """class definition"""
+class DBStorage:
+    """Define class"""
+
     __engine = None
-
     __session = None
 
     def __init__(self):
@@ -61,12 +62,11 @@ class DBStorage():
         return new_dict
 
     def new(self, obj):
-        """add the object to the current database session"""
-        if obj:
-            self.__session.add(obj)
+        """add the object"""
+        self.__session.add(obj)
 
     def save(self):
-        """commit all changes of the current database session"""
+        """commit all changes"""
         self.__session.commit()
 
     def delete(self, obj=None):
@@ -86,5 +86,5 @@ class DBStorage():
         self.__session = session_reg()
 
     def close(self):
-        """Calls remove() on private session attribute (self.session)"""
+        """call remove()"""
         self.__session.close()
