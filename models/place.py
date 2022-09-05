@@ -8,6 +8,9 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, Float, ForeignKey,\
     MetaData, Table, ForeignKey
 from sqlalchemy.orm import backref
+import models
+from models.review import Review
+
 STORAGE_TYPE = os.environ.get('HBNB_TYPE_STORAGE')
 
 if STORAGE_TYPE == "db":
@@ -53,6 +56,16 @@ class Place(BaseModel, Base):
         longitude = 0.0
         amenity_ids = []
         review_ids = []
+
+        @property
+        def reviews(self):
+            new_list = []
+            instance_review = models.storage.all[Review]
+
+            for key, value in instance_review:
+                if self.id == value.place_id:
+                    new_list.append(value)
+            return new_list
 
         @property
         def amenities(self):
