@@ -1,20 +1,16 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
-import os
 from models.base_model import BaseModel, Base
+from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-from sqlalchemy import Column, Integer, String, Float
-from sqlalchemy.orm import backref
-STORAGE_TYPE = os.environ.get('HBNB_TYPE_STORAGE')
+from os import getenv
 
 
 class Amenity(BaseModel, Base):
-    """Amenity class handles all application amenities"""
-    if STORAGE_TYPE == "db":
+    if (getenv('HBNB_TYPE_STORAGE') == 'db'):
+        from models.place import place_amenity
         __tablename__ = 'amenities'
         name = Column(String(128), nullable=False)
-        from models.place import place_amenity
-        place_amenities = relationship(
-            'Place', back_populates='amenities', secondary=place_amenity)
+        place_amenities = relationship("Place",back_populates="amenities", secondary=place_amenity)
     else:
         name = ''

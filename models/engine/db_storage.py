@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""MySql engine DBStorage"""
+"""New engine DBStorage"""
 
 from os import getenv
 from sqlalchemy import create_engine
@@ -29,14 +29,14 @@ class DBStorage:
         test = getenv('HBNB_ENV')
 
         self.__engine = create_engine(
-            "mysql+mysqldb://{}:{}@{}/{}".format(
-                user,
-                passwd,
-                host,
-                db
-            ),
-            pool_pre_ping=True
-        )
+                "mysql+mysqldb://{}:{}@{}/{}".format(
+                    user,
+                    passwd,
+                    host,
+                    db
+                    ),
+                pool_pre_ping=True
+                )
         if (test == 'test'):
             Base.metadata.drop_all(self.__engine)
 
@@ -73,15 +73,15 @@ class DBStorage:
         """delete from te current session"""
         if (obj is not None):
             self.__session.query(obj.__class__).filter(
-                obj.__class__.id == obj.id).delete(
-                synchronize_session="fetch")
+                    obj.__class__.id == obj.id).delete(
+                            synchronize_session="fetch")
 
     def reload(self):
         """create all tables in db"""
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(
-            bind=self.__engine,
-            expire_on_commit=False)
+                bind=self.__engine,
+                expire_on_commit=False)
         session_reg = scoped_session(session_factory)
         self.__session = session_reg()
 
