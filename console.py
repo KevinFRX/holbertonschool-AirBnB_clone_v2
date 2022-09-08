@@ -127,7 +127,7 @@ class HBNBCommand(cmd.Cmd):
             print("**class name doesn't exist **")
             raise NameError()
         try:
-            obj = eval(f"{line[0]}()")
+            obj = eval(line[0] + "()")
             for pair in line[1:]:
                 setting = pair.split('=')
                 setting_type = literal_eval(setting[1])
