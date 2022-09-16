@@ -67,6 +67,7 @@ def do_deploy(archive_path):
 
     return True
 
+
 def deploy():
     """comment"""
     arch = do_pack()
