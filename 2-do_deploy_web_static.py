@@ -4,7 +4,7 @@ Fabric script (based on the file 1-pack_web_static.py) that distributes
 an archive to your web servers, using the function do_deploy
 """
 
-from fabric.operations import local, run, put
+from fabric.operations import local, put, run
 from datetime import datetime
 import os
 from fabric.api import env
@@ -32,41 +32,36 @@ def do_deploy(archive_path):
     if upload.failed:
         return False
 
-    filename = archive_path.replace(".tgz", "").replace("versions/", "")
-    uncompress = run('mkdir -p /data/web_static/releases/' + filename + '/')
+    filename = archive_path.split('.')[0]
+    filename = filename.split('/')[1]
+    uncompress = run('sudo mkdir -p /data/web_static/releases/{}/'.format(filename))
     if uncompress.failed:
         return False
 
-    unpack = run('tar -zfx /tmp/' + filename + '.tgz' +
-                 ' -C /data/web_static/releases/' + filename + '/')
+    unpack = run('sudo tar -xzf /tmp/{}.tgz -C /data/web_static/releases/{}/'
+                 .format(filename, filename))
     if unpack.failed:
         return False
-    
-    cleanfile = run('rm /tmp/' + filename + '.tgz')
+
+    cleanfile = run('sudo rm -f /tmp/{}.tgz'.format(filename))
     if cleanfile.failed:
         return False
 
-    move = run('cp -R /data/web_static/releases/' + filename +
-               '/web_static/* /data/web_static/releases/' + filename + '/')
+    move = run('sudo mv /data/web_static/releases/{}/web_static/* /data/web_static/releases/{}/'.format(filename, filename))
     if move.failed:
         return False
 
-    delete_arch = run('rm -rf /data/web_static/releases/' + filename +
-                 '/web_static')
+    delete_arch = run('sudo rm -rf /data/web_static/releases/{}/web_static'
+                      .format(filename))
     if delete_arch.failed:
         return False
 
-    cleanfolder = run('rm -rf /data/web_static/releases/' + filename +
-                      '/web_static')
-    if cleanfolder.failed:
-        return False
-
-    delete_sym = run('rm -rf /data/web_static/current')
+    delete_sym = run('sudo rm -rf /data/web_static/current')
     if delete_sym.failed:
         return False
 
-    new_sym = run('ln -sf /data/web_static/releases/' + filename +
-                    '/' + ' /data/web_static/current')
+    new_sym = run('sudo ln -s /data/web_static/releases/{}/ '
+                  '/data/web_static/current'.format(filename))
     if new_sym.failed:
         return False
 
