@@ -32,7 +32,7 @@ def do_deploy(archive_path):
     if upload.failed:
         return False
 
-    filename = path.replace(".tgz", "").replace("versions/", "")
+    filename = archive_path.replace(".tgz", "").replace("versions/", "")
     uncompress = run('mkdir -p /data/web_static/releases/' + filename + '/')
     if uncompress.failed:
         return False
@@ -47,8 +47,7 @@ def do_deploy(archive_path):
         return False
 
     move = run('cp -R /data/web_static/releases/' + filename +
-               '/web_static/* /data/web_static/releases/' + filename +
-               '/')
+               '/web_static/* /data/web_static/releases/' + filename + '/')
     if move.failed:
         return False
 
