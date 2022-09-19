@@ -34,11 +34,10 @@ def python(text="is cool"):
     return "Python " + text
 
 
-@add.route('/number/<n>', strict_slashes=False)
+@add.route('/number/<int:n>', strict_slashes=False)
 def number(n):
     """comment"""
-    if type(n) == int:
-        return n + " is a number"
+    return n + " is a number"
 
 
 if __name__ == '__main__':
