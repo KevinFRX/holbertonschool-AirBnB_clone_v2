@@ -26,7 +26,8 @@ def c(text):
     return "C " + text
 
 
-@app.route('/python/(<text>)')
+@app.route('/python')
+@app.route('/python/<text>')
 def python(text="is cool"):
     """comment"""
     text = text.repalce("_", " ")
