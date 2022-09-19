@@ -34,7 +34,8 @@ def do_deploy(archive_path):
 
     filename = archive_path.split('.')[0]
     filename = filename.split('/')[1]
-    uncompress = run('sudo mkdir -p /data/web_static/releases/{}/'.format(filename))
+    uncompress = run('sudo mkdir -p /data/web_static/releases/{}/'
+                     .format(filename))
     if uncompress.failed:
         return False
 
@@ -47,7 +48,8 @@ def do_deploy(archive_path):
     if cleanfile.failed:
         return False
 
-    move = run('sudo mv /data/web_static/releases/{}/web_static/* /data/web_static/releases/{}/'.format(filename, filename))
+    move = run('sudo mv /data/web_static/releases/{}/web_static/* '
+               '/data/web_static/releases/{}/'.format(filename, filename))
     if move.failed:
         return False
 

@@ -34,7 +34,8 @@ def do_deploy(archive_path):
 
     filename = archive_path.split('.')[0]
     filename = filename.split('/')[1]
-    uncompress = run('sudo mkdir -p /data/web_static/releases/{}/'.format(filename))
+    uncompress = run('sudo mkdir -p /data/web_static/releases/{}/'
+                     .format(filename))
     if uncompress.failed:
         return False
 
