@@ -31,7 +31,7 @@ def c(text):
 def python(text="is cool"):
     """comment"""
     text = text.replace("_", " ")
-    return "Python " + text
+    return "Python {}".format(text)
 
 
 if __name__ == '__main__':
